@@ -105,5 +105,137 @@ In future, worth figuring out how to use the ultra file command that shows the t
 
 Password:HWasnPhtq9AVKe0dmk45nxy20cvUa6EG 
 
+
+
 Level 7
+
+
+
+
+The password for the next level is stored somewhere on the server and has all of the following properties:
+
+owned by user bandit7
+owned by group bandit6
+33 bytes in size
+
+This level clearly requires understanding of permissions. Time to review that information again. 
+
+
+Realised that find . is not going to work here, we need to cast a wider net than simply searching through the current directory onwards. Starting to search from the root directory instead will yield more results for us to look at. Used find / -user bandit7 -size 33c at first which yielded many results, but fewer than with jsut one condition. Thinking of adding the third flag which is searching for the group too. Tip seems to be to attach 2>/dev/null on the end of the command to clean up the output and make sure errors are discarded. 
+
+Combining all aspects into one command yields a result. find / -user bandit7 -group bandit6 -size 33c 2>/dev/null
+
+Using cd command to get into the directory containing the password file, and then catting the password file gives us the password. The key for this level was understanding that i needed to cast as wide a net as possible using find . and also that I needed to discard standard errors using 2>dev/null. Important to go over the standard error videos again. 
+
+
+1. The 2 (Targeting Errors)
+The number 2 tells the terminal to isolate the Standard Error pipeline. It leaves your successful data pipeline (1) completely untouched.
+
+2. The > (The Redirector)
+The > symbol is a redirection operator. It acts like a one-way valve, taking whatever data is coming out of the stream on its left and forcing it into the destination on its right.
+
+3. The /dev/null (The Black Hole)
+In Linux, /dev/null is a special system file known as the null device. It is a virtual trash can or digital shredder. Any data written to it is instantly deleted by the operating system and vanishes forever.
+
+
+Password: morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj
+
+
+
+
+
+
+Level 8
+
+
+The password for the next level is stored in the file data.txt next to the word millionth
+
+
+Thinking of utilising the grep command, which is used to print lines that match patterns.Rewatched the grep video which showed me how to use the command. Man page for grep felt slightly unclear. Need to get used to it or using a tldr man page version for commands. Performed grep 'millionth' data.txt.
+
+Password: dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc
+
+
+
+Level 9
+
+
+The password for the next level is stored in the file data.txt and is the only line of text that occurs only once
+
+Going to be using piping to redirect data output from one tool to another tool. Then that output should yield the answer.
+
+Sort can sort data in alphabetical order. Grep (maybe) can look at the sorted list and sort it by identifying duplicate lines. 
+
+Started using the tldr man pages as of this level. 
+
+Solution:
+
+After further research, I find that it is actually the uniq command that must be used. Specifically the uniq -u command, which filters out anything that appears more than once. 
+
+cat data.txt | sort | uniq -u
+
+The KEY here is that the uniq command can only work once a list has been sorted. Then we pipe between the sorted list and the uniq -u command, which will only output lines that are NOT repeated in the input. 
+
+
+Password:4CKMh1JI91bUIZZPXDqGanal4xvAg0JM
+
+
+Level 10 
+
+
+The password for the next level is stored in the file data.txt in one of the few human-readable strings, preceded by several ‘=’ characters.
+
+
+From Google search, found out that the most efficient solution is likely using strings command piped with grep to find strings that actually begin with '=='
+
+Firstly, strings command prints the printable (i.e. readable) strings of text within the text file. This is then piped throughto the grep command which will pinpoint specific patterns buried in otherwise unreadable data, where in this case it allows us to find two equals signs next to each other before the text. 
+
+
+
+
+Password: FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
+
+
+
+Level 11
+
+The password for Level 11 is stored in data.txt, which contains base64 encoded data.
+
+ssh bandit10@bandit.labs.overthewire.org -p 2220 Password: FGUW5ilLVJrxX9kMYMmlN4Mgbpfmiqey
+
+Once logged in: ls cat data.txt base64 -d data.txt
+
+Explanation
+cat data.txt showed a string of seemingly random characters — it was base64 encoded
+base64 -d data.txt decoded the file and printed the original content
+The decoded output contained the password. Or could have used cat data.txt | base64 -d piping technique to arrive at the solution. 
+
+Password: dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
+
+
+Level 12
+
+
+
+The password for Level 12 is stored in data.txt, where all lowercase and uppercase letters have been rotated by 13 positions (ROT13 cipher). Used what I had learned from research on StackOverflow about how to solve the ROT13 famous cipher.
+
+
+Once logged in: ls cat data.txt cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+
+
+
+Password: 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
+
+
+
+
+Level 13 
+
+
+The password for the next level is stored in the file data.txt, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work. Use mkdir with a hard to guess directory name. Or better, use the command “mktemp -d”. Then copy the datafile using cp, and rename it using mv (read the manpages!)
+
+See notepad or online solution for full notes but tldr, rinsing the use of the file command, interlaced with an assortment of different decompression commands. 
+
+Password: FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn
+
 
