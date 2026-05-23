@@ -239,3 +239,108 @@ See notepad or online solution for full notes but tldr, rinsing the use of the f
 Password: FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn
 
 
+Level 14
+
+
+The password for the next level is stored in /etc/bandit_pass/bandit14 and can only be read by user bandit14. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. Look at the commands that logged you into previous bandit levels, and find out how to use the key for this level.
+If you need help with this level: a hint file can be found in the home directory.
+Make sure to read the error messages as they are informative.
+
+Intended solution was blocked apparently, since OverTheWire Bandit blocks localhost SSH connections to conserve resources. 
+
+What we did instead.
+
+Tried both localhost and .org connections which were both blocked. Then printed key with cat sshkey.private to extract it manually.
+Then saved the clean key to my local machine on a separate Gitbash window as ~/bandit14.key to SHH from outside the server. 
+Then enforced the chmod 600 ~/bandit14.key permission to the key because otherwise, SSH refuses keys with loosely set permissions. 
+Finally, I connected from local machine, thus bypassing the block. ssh -i ~/bandit14.key bandit14@bandit.labs.overthewire.org -p 2220
+Easily retrieved the password at the end, using command cat /etc/bandit_pass/bandit14. 
+
+Password: MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
+
+Level 15
+
+The password for the next level can be retrieved by submitting the password of the current level to port 30000 on localhost.
+
+nc localhost 30000
+This connects to the correct port 30000. After getting a blank line show up, I just need to paste the previously obtained password from this level's etc folder. Shows up as correct and provides me with the password required for the next level. 
+
+Note that this level introduces the concept of network services. These are programs that listen on a port and respond to input. Netcat (NC) is similar to a raw telephone call to a port. You connect to it and type. Whatever you send, the service receives and responds to that. 
+
+Password: 8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
+
+Level 16
+
+The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL/TLS encryption.
+
+OpenSSL's built in tool is the openssl s_client tool, which is useful for making SSL/TLS encrypted connections. It's like nc but with encryption and commonly used to test and debug SSL connections. 
+
+Password:kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
+
+To solve this level, I made use of the openssl (instead of nc) because this allows for an encrypted connection to the port. The command was openssl s_client -connect localhost:30001
+
+After the massive block of text, I pasted the password from the previous level and hit enter. It then stated that the password entered is correct, and I was provided the password needed for the next level. 
+
+nc        → sends raw unencrypted text → port 30001 expects encrypted → rejected
+s_client  → performs SSL handshake first → then sends encrypted text → accepted
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
