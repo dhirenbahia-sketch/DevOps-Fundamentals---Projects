@@ -1,5 +1,7 @@
 # 05 - Docker
 
+This part of the overall coderco learnings repo will detail my docker learnings in particular, the journey along the way.
+
 Containers changed everything. Docker packages and runs applications consistently.
 
 ## What You'll Learn
