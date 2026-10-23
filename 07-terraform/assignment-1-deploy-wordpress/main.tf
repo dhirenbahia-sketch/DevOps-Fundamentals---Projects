@@ -57,7 +57,7 @@ resource "aws_security_group" "wordpress_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["46.65.67.64/32"] # Replaced with personal IP address for SSH access
     }
 
     ingress {
@@ -82,8 +82,6 @@ resource "aws_instance" "wordpress_ec2" {
     subnet_id     = aws_subnet.wordpress_subnet.id
     vpc_security_group_ids = [aws_security_group.wordpress_sg.id]
     user_data = file("${path.module}/user-data.sh")
-
-
 
 }
 
