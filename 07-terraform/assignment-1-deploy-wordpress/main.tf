@@ -84,8 +84,27 @@ resource "aws_instance" "wordpress_ec2" {
     subnet_id     = aws_subnet.wordpress_subnet.id
     vpc_security_group_ids = [aws_security_group.wordpress_sg.id]
     associate_public_ip_address = true
+    key_name = aws_key_pair.wordpress_auth.key_name
     user_data = file("${path.module}/user-data.sh")
     
 
 }
 
+# Generate a private key locally
+resource "tls_private_key" "wordpress_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+# Register that key with AWS
+resource "aws_key_pair" "wordpress_auth" {
+  key_name   = "wordpress-tf-key"
+  public_key = tls_private_key.wordpress_key.public_key_openssh
+}
+
+# Save the private key (.pem file) into your project folder automatically
+resource "local_file" "private_key" {
+  content         = tls_private_key.wordpress_key.private_key_pem
+  filename        = "${path.module}/wordpress-tf-key.pem"
+  file_permission = "0400"
+}
