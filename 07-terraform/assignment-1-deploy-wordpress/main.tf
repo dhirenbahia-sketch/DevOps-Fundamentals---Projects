@@ -73,6 +73,17 @@ resource "aws_security_group" "wordpress_sg" {
         protocol    = "-1"
         cidr_blocks = ["0.0.0.0/0"]
     }
+}
 
 # Creating the EC2 Instance Block"
+resource "aws_instance" "wordpress_ec2" {
+    ami          = var.ami_id
+    instance_type = var.instance_type
+    subnet_id     = aws_subnet.wordpress_subnet.id
+    vpc_security_group_ids = [aws_security_group.wordpress_sg.id]
+    user_data = file("${path.module}/user-data.sh")
+
+
+
+}
 
