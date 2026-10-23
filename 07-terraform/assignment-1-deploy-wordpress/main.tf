@@ -16,6 +16,8 @@ provider "aws" {
 # Create a VPC
 resource "aws_vpc" "wordpress_vpc" {
   cidr_block = var.VPC_CIDR
+  enable_dns_hostnames = true
+  enable_dns_support = true
 }
 
 #Create an IGW
@@ -81,7 +83,9 @@ resource "aws_instance" "wordpress_ec2" {
     instance_type = var.instance_type
     subnet_id     = aws_subnet.wordpress_subnet.id
     vpc_security_group_ids = [aws_security_group.wordpress_sg.id]
+    associate_public_ip_address = true
     user_data = file("${path.module}/user-data.sh")
+    
 
 }
 
