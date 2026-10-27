@@ -1,0 +1,10 @@
+# Local .terraform directories
+.terraform/
+
+# State files (contains state metadata and potential secrets)
+*.tfstate
+*.tfstate.*
+
+# Crash logs
+crash.log
+crash.*.log
