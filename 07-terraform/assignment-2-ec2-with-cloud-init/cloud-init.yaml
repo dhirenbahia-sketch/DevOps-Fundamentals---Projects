@@ -1,0 +1,26 @@
+#cloud-config
+
+packages:
+  - nginx
+runcmd:
+  - systemctl enable nginx
+  - systemctl start nginx
+
+write_files:
+  - path: /usr/share/nginx/html/index.html
+    content: |
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Welcome to Nginx!</title>
+      </head>
+      <body>
+          <h1>Success! My Nginx web server is installed and working!</h1>
+      </body>
+      </html>
+    owner: root:root
+    permissions: '0644'
+    defer: true
+
+
+
