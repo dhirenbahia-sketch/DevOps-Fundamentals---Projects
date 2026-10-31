@@ -24,13 +24,13 @@ jobs:
 
         - name: Install dependencies
           run: |
-            cd cicd demos
+            cd "cicd demos"
             python -m pip install --upgrade pip
-            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+            if [ -f "requirements.txt" ]; then pip install -r "requirements.txt"; fi
 
         - name: Run tests
           run: |
-            cd cicd demos
+            cd "cicd demos"
             python -m unittest discover 
 
         - name: notify us of success
