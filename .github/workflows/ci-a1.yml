@@ -25,14 +25,14 @@ jobs:
                 if [ -f "requirements.txt" ]; then pip install -r "requirements.txt"; fi
                 pip install pytest flake8
 
-                - name: Lint
-                  run: flake8 . --max-line-length=100
+            - name: Lint
+              run: flake8 . --max-line-length=100
 
-                - name: Run tests
-                  run: pytest
+            - name: Run tests
+              run: pytest
 
-                - name: Docker build check
-                  run: docker build -t myapp .
+            - name: Docker build check
+              run: docker build -t myapp .
 
 
 
