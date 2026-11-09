@@ -22,18 +22,17 @@ jobs:
             - name: Install dependencies
               run: |
                 python -m pip install --upgrade pip
-                if [ -f "requirements.txt" ]; then pip install -r "requirements.txt"; fi
+                pip install -r cicd-assignment-1/requirements.txt
                 pip install pytest flake8
 
             - name: Lint
               run: flake8 ./cicd-assignment-1 --max-line-length=100
 
             - name: Run tests
-              run: pytest
+              run: pytest ./cicd-assignment-1
 
             - name: Docker build check
-              run: docker build -t myapp .
-
+              run: docker build -t myapp ./cicd-assignment-1
 
 
             
