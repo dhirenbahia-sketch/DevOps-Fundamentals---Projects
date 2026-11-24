@@ -48,35 +48,17 @@ jobs:
 
               
               run: |
+                run: |
                 set -e
 
-                echo "STEP 1: Creating SSH directory"
                 mkdir -p "$HOME/.ssh"
 
-                echo "STEP 2: Writing private key"
-                printf '%s' "$EC2_SSH_KEY_B64" | base64 --decode > ~/.ssh/ec2_key
+                printf '%s' "$EC2_SSH_KEY_B64" | base64 --decode > "$HOME/.ssh/ec2_key"
                 chmod 600 "$HOME/.ssh/ec2_key"
 
-                echo "STEP 3: Validating private key"
-                if ! ssh-keygen -y -f "$HOME/.ssh/ec2_key" > /dev/null; then
-                  echo "ERROR: GitHub Actions cannot read the private key"
-                  exit 1
-                fi
+                ssh-keyscan -H "$EC2_HOST" >> "$HOME/.ssh/known_hosts"
 
-                echo "STEP 4: Testing network connection to EC2"
-                if ! timeout 10 bash -c "</dev/tcp/$EC2_HOST/22" 2>/dev/null; then
-                  echo "ERROR: Cannot reach EC2 on port 22"
-                  exit 1
-                fi
-
-                echo "STEP 5: Retrieving EC2 host key"
-                if ! ssh-keyscan -T 10 -H "$EC2_HOST" > "$HOME/.ssh/known_hosts"; then
-                  echo "ERROR: ssh-keyscan could not retrieve the EC2 host key"
-                  exit 1
-                fi
-
-                echo "STEP 6: Connecting to EC2"
-                ssh -v -i "$HOME/.ssh/ec2_key" "$EC2_USER@$EC2_HOST" << 'EOF'
+                ssh -i "$HOME/.ssh/ec2_key" "$EC2_USER@$EC2_HOST" << 'EOF'
                   cd /home/ec2-user/DevOps-Fundamentals---Projects/cicd-assignment-1
 
                   git pull origin main
